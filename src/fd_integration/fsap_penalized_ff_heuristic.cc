@@ -336,7 +336,7 @@ int FSAPPenalizedFFHeuristic::compute_heuristic(const State &state) {
         PR2.deadend.policy->generate_entailed_items(*ps, reg_items);
         delete ps;
         for (auto item : reg_items)
-            forbidden_ops.insert(item->get_index());
+            forbidden_ops.insert(item->get_nondet_index());
 
         // Collecting the relaxed plan also sets the preferred operators.
         for (size_t i = 0; i < goal_propositions.size(); ++i)

@@ -5,6 +5,7 @@
 #include "../../plan_manager.h"
 #include "../../search_algorithm.h"
 #include "../../plugins/options.h"
+#include <regex>
 
 class TaskProxy;
 class OperatorProxy;
@@ -40,6 +41,7 @@ public:
     int nondet_outcome;
 
     // TODO: https://github.com/QuMuLab/rbp/blob/main/src/search/global_operator.cc#L142
+    // Dead link
     PR2State *all_fire_context;
 
     PR2OperatorProxy(const AbstractTask &task, int index, bool is_axiom)
@@ -55,11 +57,9 @@ public:
             return "goal_action";
         }
         string name = get_name();
-        // Split the get_name() string and return everything before _DETDUP_x and after
-        //Only works up to 9 splits. Will have to be rewritten to accomdate more
-        if (name.find("_detdup_") != std::string::npos)
-            name = name.erase(name.find("_detdup_"), name.find("_detdup_") + 1);
-        return name;
+        std::regex target("_detdup_[0-9]*");
+        string name2 = std::regex_replace(name, target, "");
+        return name2;
     }
     void dump() const {
         cout << "Operator: " << get_name() << endl;

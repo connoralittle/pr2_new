@@ -64,6 +64,12 @@ bool PR2State::triggers(const EffectProxy &effect) {
     return true;
 }
 
+bool PR2State::triggers(const FactProxy &fact) {
+    if (vars[fact.get_variable().get_id()] != fact.get_value())
+        return false;
+    return true;
+}
+
 PR2State * PR2State::progress(const PR2OperatorProxy &op) {
 
     assert(!op.is_axiom());
@@ -93,11 +99,15 @@ PR2State * PR2State::regress(const PR2OperatorProxy &op, PR2State *context) {
 
     PR2State * prev = new PR2State(*this);
 
+    std::set<int> seen;
+
     // Remove all of the effect settings
     for (auto eff : op.get_all_effects()) {
         if (context->triggers(eff)) {
             int var = eff.get_fact().get_variable().get_id();
             int val = eff.get_fact().get_value();
+
+            seen.insert(var);
 
             bool inconsistent = (vars[var] != -1) && (vars[var] != val);
 
@@ -105,12 +115,23 @@ PR2State * PR2State::regress(const PR2OperatorProxy &op, PR2State *context) {
                 cout << "\n\n !! Error: Inconsistent regression !!\n" << endl;
                 // Dump the effect
                 cout << "Effect: " << endl;
+                op.dump();
+
                 for (auto cond : eff.get_conditions())
                     cout << "  " << cond.get_variable().get_id() << " = " << cond.get_value() << endl;
             }
 
             assert(!inconsistent);
             (*prev)[eff.get_fact().get_variable().get_id()] = -1;
+        }
+    }
+
+    // Remove all of the prevail effects
+    for (auto pre : op.get_preconditions()) {
+        int var = pre.get_variable().get_id();
+        int val = pre.get_value();
+        if (0 == seen.count(var) && context->triggers(pre)) {
+            (*prev)[var] = -1;
         }
     }
     

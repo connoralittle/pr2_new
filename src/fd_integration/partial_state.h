@@ -53,6 +53,7 @@ public:
     PR2State * progress(const PR2OperatorProxy &op);
     PR2State * regress(const PR2OperatorProxy &op, PR2State *context=NULL);
 
+    bool triggers(const FactProxy &fact);
     bool triggers(const EffectProxy &effect);
     bool consistent_with(const PR2State &other);
     bool entails(const PR2State &other);

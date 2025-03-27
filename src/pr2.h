@@ -311,6 +311,7 @@ struct PR2Wrapper {
         // General data structures
         vector< vector<int> > nondet_mapping; // Maps a non-deterministic action id to a list of ground operator ids
         map<int, int> nondet_outcome_mapping; // Maps an action id to the outcome of the non-deterministic action
+        map<string, int> nondet_name_to_index; // Maps an action name to a non-deterministic index
 
         vector<vector<int> *> conditional_mask; // Maps a non-deterministic action id to the variables that must be defined when doing context-sensitive regression
         Policy<PolicyItem> *regressable_ops; // The policy to check what operators are regressable

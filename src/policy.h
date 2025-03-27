@@ -53,6 +53,8 @@ struct FSAP : PolicyItem {
     string get_name();
     int get_index();
     void dump() const;
+
+    int get_nondet_index();
 };
 
 template<typename T> class Policy {

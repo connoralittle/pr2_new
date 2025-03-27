@@ -112,7 +112,7 @@ void SolutionStep::strengthen(PR2State *context) {
     for (auto fsap : reg_items) {
 
         // If this holds, then we may trigger the forbidden pair
-        if (fsap->get_index() == op.nondet_index) {
+        if (fsap->get_nondet_index() == op.nondet_index) {
 
             for (unsigned j = 0; j < PR2.general.num_vars; j++) {
 

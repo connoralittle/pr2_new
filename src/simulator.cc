@@ -196,6 +196,7 @@ bool Simulator::check_1safe() {
     PR2OperatorsProxy ops = PR2.proxy->get_operators();
     for (unsigned i = 0; i < safe_checks; i++) {
         const PR2OperatorProxy op = ops[engine->get_plan()[i]];
+
         PR2OperatorProxy *op_stable = new PR2OperatorProxy(op);
         vector<NondetSuccessor *> successors;
         new_s = generate_nondet_successors(old_s, op_stable, successors);
@@ -203,11 +204,11 @@ bool Simulator::check_1safe() {
         for (auto succ : successors) {
             if (is_deadend(*(succ->state))) {
                 PR2State * new_dead_state = new PR2State(*(succ->state));
-                int op_ind = PR2.general.nondet_mapping[op_stable->nondet_index][succ->id - 1];
+                int op_ind = PR2.general.nondet_mapping[op_stable->nondet_index][succ->id];
                 const PR2OperatorProxy bad_op = ops[op_ind];
                 PR2OperatorProxy *bad_op_stable = new PR2OperatorProxy(bad_op);
                 if (PR2.deadend.generalize)
-                    generalize_deadend(*new_dead_state);
+                    generalize_deadend(*new_dead_state);  
                 new_deadends.push_back(new DeadendTuple(new_dead_state, new PR2State(*old_s), bad_op_stable));
             }
         }

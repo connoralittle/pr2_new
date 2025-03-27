@@ -144,7 +144,7 @@ void DeadendAwareSuccessorGenerator::generate_applicable_ops(const PR2State &_cu
         set<int> forbidden;
         for (auto item : reg_items) {
 
-            int index = item->get_index();
+            int index = item->get_nondet_index();
 
             forbidden.insert(index);
 
@@ -165,7 +165,7 @@ void DeadendAwareSuccessorGenerator::generate_applicable_ops(const PR2State &_cu
         if (!PR2.weaksearch.limit_states && PR2.deadend.record_online &&
              PR2.deadend.combine && (orig_ops.size() > 0) && ops.empty()) {
 
-            // Combind all of the FSAPs
+            // Combined all of the FSAPs
             PR2State *newDE = new PR2State();
             for (unsigned i = 0; i < ruled_out.size(); i++) {
                 newDE->combine_with(*((fsap_map[ruled_out[i]])->state));

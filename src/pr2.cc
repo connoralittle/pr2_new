@@ -238,7 +238,6 @@ bool PR2Wrapper::run_pr2() {
 
     }
 
-
     cout << endl;
 
     return PR2.solution.best->is_strong_cyclic();
@@ -267,17 +266,14 @@ void PR2Wrapper::generate_nondet_operator_mappings() {
     assert(PR2.general.nondet_outcome_mapping.empty());
 
     // temporary mapping from non-det name to index
-    map<string, int> nondet_name_to_index;
 
     int current_nondet_index = 0;
     
     for (auto op : PR2.proxy->get_operators()) {
         //If not in the mapping yet
-        PR2.general.conditional_mask.push_back(new vector<int>());
-        PR2.deadend.nondetop2fsaps.push_back(new vector< FSAP* >());
 
-        if (nondet_name_to_index.find(op.get_nondet_name()) == nondet_name_to_index.end()) {
-            nondet_name_to_index[op.get_nondet_name()] = current_nondet_index;
+        if (PR2.general.nondet_name_to_index.find(op.get_nondet_name()) == PR2.general.nondet_name_to_index.end()) {
+            PR2.general.nondet_name_to_index[op.get_nondet_name()] = current_nondet_index;
             PR2.general.nondet_mapping.push_back(vector<int>());
             current_nondet_index++;
 
@@ -286,10 +282,10 @@ void PR2Wrapper::generate_nondet_operator_mappings() {
             PR2.general.conditional_mask.push_back(new vector<int>());
             PR2.deadend.nondetop2fsaps.push_back(new vector< FSAP* >());
         }
-        PR2.general.nondet_mapping[nondet_name_to_index[op.get_nondet_name()]].push_back(op.get_id());
+        PR2.general.nondet_mapping[PR2.general.nondet_name_to_index[op.get_nondet_name()]].push_back(op.get_id());
         PR2.general.nondet_outcome_mapping[op.get_id()] =
-            PR2.general.nondet_mapping[nondet_name_to_index[op.get_nondet_name()]].size() - 1;
-        op.nondet_index = nondet_name_to_index[op.get_nondet_name()];
+            PR2.general.nondet_mapping[PR2.general.nondet_name_to_index[op.get_nondet_name()]].size() - 1;
+        op.nondet_index = PR2.general.nondet_name_to_index[op.get_nondet_name()];
         op.nondet_outcome = PR2.general.nondet_outcome_mapping[op.get_id()];
         nondet_index_map[op.get_id()] = op.nondet_index;
 

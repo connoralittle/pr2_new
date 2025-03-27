@@ -36,6 +36,10 @@ int FSAP::get_index() {
     return op->get_id();
 }
 
+int FSAP::get_nondet_index() {
+    return PR2.general.nondet_name_to_index[op->get_nondet_name()];
+}
+
 
 bool is_deadend(PR2State &state) {
     PR2.deadend.reachability_heuristic->reset();
@@ -154,8 +158,9 @@ void update_deadends(vector< DeadendTuple* > &failed_states) {
     }
 
     // Add a pointer from the operator to the newly created fsaps
-    for (auto fsap : fsaps)
-        PR2.deadend.nondetop2fsaps[fsap->get_index()]->push_back(fsap);
+    for (auto fsap : fsaps) {
+        PR2.deadend.nondetop2fsaps[fsap->get_nondet_index()]->push_back(fsap);
+    }
 
     PR2.deadend.policy->update_policy(fsaps);
     PR2.deadend.states->update_policy(deadends);
